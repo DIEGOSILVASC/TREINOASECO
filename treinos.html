@@ -7896,39 +7896,37 @@ function resetAll(){
 </script>
 
 
+<!-- PATCH: DISPARAR EVENTOS PARA GRÁFICO -->
 <script>
-// === PATCH FINAL: DISPARAR EVENTOS PARA GRÁFICO + MELHOR HF ===
-window.addEventListener("load", function(){
-  document.querySelectorAll("#testes input").forEach(function(input){
+window.addEventListener("load", function () {
+  document.querySelectorAll("#testes input").forEach(function (input) {
     input.dispatchEvent(new Event("input", { bubbles: true }));
     input.dispatchEvent(new Event("change", { bubbles: true }));
   });
 });
+</script>
+
+<!-- Biblioteca Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<!-- Cliente Supabase -->
+<script src="./supabase.js"></script>
+
+<!-- Adapter -->
+<script src="./supabase-adapter.js"></script>
+
+<!-- PROTEÇÃO DE ROTA (DEPOIS DO SUPABASE) -->
 <script>
 (async function protegerRota() {
-  if (!window.supabaseClient) return;
-
   const { data } = await window.supabaseClient.auth.getUser();
 
   if (!data.user) {
-    // não está logado → volta para login
     window.location.href = "./index.html";
   }
 })();
 </script>
 
-
-</script>
-
-<!-- 1️⃣ Biblioteca Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<!-- 2️⃣ Cliente Supabase -->
-<script src="./supabase.js"></script>
-
-<!-- 3️⃣ Adapter (UMA ÚNICA VEZ) -->
-<script src="./supabase-adapter.js"></script>
-
 </body>
 </html>
+
 
