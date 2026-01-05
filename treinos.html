@@ -7904,6 +7904,20 @@ window.addEventListener("load", function(){
     input.dispatchEvent(new Event("change", { bubbles: true }));
   });
 });
+<script>
+(async function protegerRota() {
+  if (!window.supabaseClient) return;
+
+  const { data } = await window.supabaseClient.auth.getUser();
+
+  if (!data.user) {
+    // não está logado → volta para login
+    window.location.href = "./index.html";
+  }
+})();
+</script>
+
+
 </script>
 
 <!-- 1️⃣ Biblioteca Supabase -->
