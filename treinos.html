@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Treino a Seco - 330 Dias</title>
+<div id="userBar" style="margin-bottom:12px; font-size:14px;">
+  Logado como: <strong id="userEmail">...</strong>
+</div>
+
 <style>
 body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f4f4; }
 header { background:#fff; border-bottom:4px solid #b32017; padding:15px 20px; display:flex; gap:20px; align-items:center; }
@@ -7895,7 +7899,6 @@ function resetAll(){
 }
 </script>
 
-
 <!-- 1️⃣ Biblioteca Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -7916,7 +7919,30 @@ function resetAll(){
 })();
 </script>
 
-<!-- 5️⃣ Patch gráfico (pode ficar por último) -->
+<!-- 5️⃣ UI do usuário + Logout -->
+<script>
+(async function userUI() {
+  const { data } = await window.supabaseClient.auth.getUser();
+
+  if (!data.user) return;
+
+  const emailEl = document.getElementById("userEmail");
+  if (emailEl) {
+    emailEl.innerText = data.user.email;
+  }
+
+  const btnLogout = document.getElementById("btnLogout");
+  if (btnLogout) {
+    btnLogout.addEventListener("click", async () => {
+      await window.supabaseClient.auth.signOut();
+      localStorage.removeItem("treino330");
+      window.location.href = "./index.html";
+    });
+  }
+})();
+</script>
+
+<!-- 6️⃣ Patch gráfico (por último mesmo) -->
 <script>
 window.addEventListener("load", function(){
   document.querySelectorAll("#testes input").forEach(function(input){
@@ -7925,5 +7951,9 @@ window.addEventListener("load", function(){
   });
 });
 </script>
+
+</body>
+</html>
+
 
 
