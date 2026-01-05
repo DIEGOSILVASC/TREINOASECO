@@ -2,143 +2,117 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+
+  <!-- 🔥 ESSENCIAL PARA MOBILE FUNCIONAR -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Projeto 330 — Login</title>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="./supabase.js"></script>
-
   <style>
-    /* RESET */
     * {
       box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      background: url("./projeto330-desktop.png") no-repeat center center;
+      min-height: 100vh;
+      background-image: url("./projeto330-desktop.png");
       background-size: cover;
+      background-position: center;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
 
-    /* CARD LOGIN */
     .login-card {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 24px 28px;
-      width: 320px;
+      background: rgba(255,255,255,0.95);
+      width: 420px;
+      max-width: 92%;
+      padding: 24px;
       border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
     .login-card h2 {
-      margin: 0 0 16px 0;
       text-align: center;
+      margin-bottom: 20px;
     }
 
     .login-card input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
     }
 
     .login-card button {
       width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 6px;
-    }
-
-    .btn-primary {
-      background: #c62828;
-      color: white;
+      padding: 12px;
+      font-size: 16px;
       border: none;
+      cursor: pointer;
     }
 
-    .btn-secondary {
+    .btn-login {
+      background: #c62828;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .btn-signup {
       background: #eee;
-      border: 1px solid #ccc;
     }
 
-    /* ===== MOBILE ===== */
+    /* 📱 MOBILE DE VERDADE */
     @media (max-width: 768px) {
-  body {
-    background: blue !important;
-  }
-}
-
+      body {
+        background-image: url("./projeto330-mobile.png");
+        background-position: center top;
+      }
 
       .login-card {
-        width: 90%;
         margin-top: 45vh;
-        padding: 22px;
+        padding: 20px;
       }
     }
   </style>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="./supabase.js"></script>
 </head>
+
 <body>
 
   <div class="login-card">
     <h2>Projeto 330</h2>
 
-    <input id="email" type="email" placeholder="Email" />
-    <input id="password" type="password" placeholder="Senha" />
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Senha">
 
-    <button id="btnLogin" class="btn-primary">Entrar</button>
-    <button id="btnSignup" class="btn-secondary">Cadastrar</button>
+    <button class="btn-login" id="btnLogin">Entrar</button>
+    <button class="btn-signup" id="btnSignup">Cadastrar</button>
   </div>
 
   <script>
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
-    const btnSignup = document.getElementById("btnSignup");
-    const btnLogin = document.getElementById("btnLogin");
 
-    // CADASTRO
-    btnSignup.addEventListener("click", async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      if (!email || !password) {
-        alert("Preencha email e senha");
-        return;
-      }
-
+    document.getElementById("btnSignup").onclick = async () => {
       const { error } = await window.supabaseClient.auth.signUp({
-        email,
-        password
+        email: emailInput.value,
+        password: passwordInput.value
       });
 
-      if (error) {
-        alert("Erro: " + error.message);
-      } else {
-        alert("Usuário criado! Agora clique em Entrar.");
-      }
-    });
+      alert(error ? error.message : "Usuário criado! Agora faça login.");
+    };
 
-    // LOGIN
-    btnLogin.addEventListener("click", async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
+    document.getElementById("btnLogin").onclick = async () => {
       const { error } = await window.supabaseClient.auth.signInWithPassword({
-        email,
-        password
+        email: emailInput.value,
+        password: passwordInput.value
       });
 
-      if (error) {
-        alert("Erro: " + error.message);
-        return;
-      }
-
-      window.location.href = "./treinos.html";
-    });
-  </script>
-
-</body>
-</html>
+      if (error) alert(error.message);
+      else window.location.href = "./treinos.html";
