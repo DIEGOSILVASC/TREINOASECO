@@ -1,89 +1,101 @@
+// ================================
+// SUPABASE ADAPTER – TREINO 330
+// ================================
+
 (async function () {
+  // Aguarda Supabase estar disponível
   if (!window.supabaseClient) {
-    console.warn("Supabase client não encontrado. Adapter abortado.");
+    console.error("Supabase client não encontrado");
     return;
   }
 
-  const STORAGE_PREFIX = ""; // vamos salvar tudo
-  const TABLE = "treinos";
+  // ================================
+  // 1️⃣ OBTÉM USUÁRIO LOGADO
+  // ================================
+  const { data: authData, error: authError } =
+    await window.supabaseClient.auth.getUser();
 
-  async function salvarTudoNoSupabase() {
-    try {
-      const { data: userData } = await window.supabaseClient.auth.getUser();
-      if (!userData.user) return;
-
-      const snapshot = {};
-
-const MAIN_KEY = "treino330";
-
-if (localStorage.getItem(MAIN_KEY)) {
-  snapshot[MAIN_KEY] = localStorage.getItem(MAIN_KEY);
-}
-
-
-      await window.supabaseClient
-        .from(TABLE)
-        .upsert({
-          user_id: userData.user.id,
-          payload: JSON.stringify(snapshot),
-          updated_at: new Date().toISOString()
-        });
-    } catch (e) {
-      console.error("Erro ao salvar no Supabase:", e);
-    }
+  if (authError || !authData.user) {
+    console.warn("Usuário não autenticado");
+    return;
   }
 
-  async function restaurarTudoDoSupabase() {
-    try {
-      const { data: userData } = await window.supabaseClient.auth.getUser();
-      if (!userData.user) return;
+  const user = authData.user;
 
-      const { data } = await window.supabaseClient
-  .from(TABLE)
-  .select("payload")
-  .eq("user_id", userData.user.id)
-  .order("updated_at", { ascending: false })
-  .limit(1);
+  // ================================
+  // 2️⃣ LOAD – BUSCA ÚNICO REGISTRO
+  // ================================
+  async function loadFromSupabase() {
+    const { data, error } = await window.supabaseClient
+      .from("treinos")
+      .select("payload")
+      .eq("user_id", user.id)
+      .single();
 
-if (!data || data.length === 0) return;
+    if (error) {
+      // Não é erro se ainda não existir registro
+      console.info("Nenhum payload salvo ainda");
+      return;
+    }
 
-const snapshot = JSON.parse(data[0].payload);
-Object.keys(snapshot).forEach(key => {
-  localStorage.setItem(key, snapshot[key]);
-});
+    if (data && data.payload) {
+      try {
+        const payload =
+          typeof data.payload === "string"
+            ? JSON.parse(data.payload)
+            : data.payload;
 
-
-      if (data && data.payload) {
-        const snapshot = JSON.parse(data.payload);
-        Object.keys(snapshot).forEach(key => {
-          localStorage.setItem(key, snapshot[key]);
-        });
-        console.log("LocalStorage restaurado do Supabase");
+        // Salva no localStorage
+        localStorage.setItem("treino330", JSON.stringify(payload));
+        console.info("Payload restaurado do Supabase");
+      } catch (e) {
+        console.error("Erro ao parsear payload:", e);
       }
-    } catch (e) {
-      console.warn("Nenhum dado anterior para restaurar");
     }
   }
 
-  // restaura ao abrir
-window.supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_IN" && session) {
-    restaurarTudoDoSupabase();
+  // ================================
+  // 3️⃣ SAVE – UPSERT (SEM DUPLICAR)
+  // ================================
+  async function saveToSupabase(payload) {
+    const { error } = await window.supabaseClient
+      .from("treinos")
+      .upsert(
+        {
+          user_id: user.id,
+          payload: payload,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: "user_id" }
+      );
+
+    if (error) {
+      console.error("Erro ao salvar no Supabase:", error);
+    } else {
+      console.info("Progresso salvo no Supabase");
+    }
   }
-});
 
+  // ================================
+  // 4️⃣ HOOK NO BOTÃO "SALVAR"
+  // ================================
+  const originalSetItem = localStorage.setItem;
 
-  // salva ao sair / recarregar
-  window.addEventListener("beforeunload", salvarTudoNoSupabase);
+  localStorage.setItem = function (key, value) {
+    originalSetItem.apply(this, arguments);
 
-window.salvarTreinoAgora = function () {
-  salvarTudoNoSupabase();
-};
-document.addEventListener("click", (e) => {
-  const el = e.target;
-  if (el.tagName === "BUTTON" && el.innerText.toLowerCase().includes("salvar")) {
-    window.salvarTreinoAgora();
-  }
-});
+    if (key === "treino330") {
+      try {
+        const payload = JSON.parse(value);
+        saveToSupabase(payload);
+      } catch (e) {
+        console.error("Payload inválido:", e);
+      }
+    }
+  };
 
+  // ================================
+  // 5️⃣ EXECUTA LOAD AO INICIAR
+  // ================================
+  await loadFromSupabase();
 })();
