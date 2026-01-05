@@ -66,7 +66,7 @@ Object.keys(snapshot).forEach(key => {
   }
 
   // restaura ao abrir
- window.supabaseClient.auth.onAuthStateChange((event, session) => {
+window.supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "SIGNED_IN" && session) {
     restaurarTudoDoSupabase();
   }
@@ -79,6 +79,11 @@ Object.keys(snapshot).forEach(key => {
 window.salvarTreinoAgora = function () {
   salvarTudoNoSupabase();
 };
-
+document.addEventListener("click", (e) => {
+  const el = e.target;
+  if (el.tagName === "BUTTON" && el.innerText.toLowerCase().includes("salvar")) {
+    window.salvarTreinoAgora();
+  }
+});
 
 })();
