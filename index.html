@@ -2,25 +2,76 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Login</title>
+  <title>Projeto 330 — Login</title>
 
-  <!-- Biblioteca Supabase -->
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-  <!-- Cliente Supabase -->
   <script src="./supabase.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      background: url("./projeto330.png") no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 24px 28px;
+      width: 320px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .login-card h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .login-card button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .btn-secondary {
+      background: #eee;
+      border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+      background: #c62828;
+      color: white;
+      border: none;
+    }
+  </style>
 </head>
 <body>
 
-  <h2>Login</h2>
+  <div class="login-card">
+    <h2>Projeto 330</h2>
 
-  <input id="email" type="email" placeholder="Email" />
-  <br><br>
-  <input id="password" type="password" placeholder="Senha (mín. 6 caracteres)" />
-  <br><br>
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Senha" />
 
-  <button id="btnSignup">Cadastrar</button>
-  <button id="btnLogin">Entrar</button>
+    <button id="btnLogin" class="btn-primary">Entrar</button>
+    <button id="btnSignup" class="btn-secondary">Cadastrar</button>
+  </div>
 
   <script>
     const emailInput = document.getElementById("email");
@@ -28,7 +79,6 @@
     const btnSignup = document.getElementById("btnSignup");
     const btnLogin = document.getElementById("btnLogin");
 
-    // CADASTRO
     btnSignup.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
@@ -39,8 +89,8 @@
       }
 
       const { error } = await window.supabaseClient.auth.signUp({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       if (error) {
@@ -50,14 +100,13 @@
       }
     });
 
-    // LOGIN
     btnLogin.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
 
       const { error } = await window.supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
+        email,
+        password
       });
 
       if (error) {
@@ -65,7 +114,6 @@
         return;
       }
 
-      // login OK → vai para o app
       window.location.href = "./treinos.html";
     });
   </script>
