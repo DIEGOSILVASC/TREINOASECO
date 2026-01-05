@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>App</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/supabase.js"></script>
+</head>
+<body>
+
+<h2>Área do Usuário</h2>
+
+<p id="status">Verificando login...</p>
+
+<button id="btnSalvar">Salvar treino de teste</button>
+<button id="btnLogout">Sair</button>
+
+<script>
+(async () => {
+  const { data } = await window.supabaseClient.auth.getUser();
+
+  if (!data.user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  document.getElementById("status").innerText =
+    "Usuário logado: " + data.user.email;
+})();
+
+document.getElementById("btnSalvar").addEventListener("click", async () => {
+  const { data: userData } = await window.supabaseClient.auth.getUser();
+
+  const { error } = await window.supabaseClient
+    .from("treinos")
+    .insert({
+      user_id: userData.user.id,
+      dia: 1,
+      concluido: true,
+      observacoes: "Treino salvo com sucesso"
+    });
+
+  if (error) {
+    alert("Erro ao salvar: " + error.message);
+  } else {
+    alert("Treino salvo no banco!");
+  }
+});
+
+document.getElementById("btnLogout").addEventListener("click", async () => {
+  await window.supabaseClient.auth.signOut();
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>
