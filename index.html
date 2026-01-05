@@ -9,28 +9,33 @@
   <script src="./supabase.js"></script>
 
   <style>
+    /* RESET */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       height: 100vh;
-      background: url("./projeto330.png") no-repeat center center;
+      background: url("./projeto330-desktop.png") no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    /* CARD LOGIN */
     .login-card {
       background: rgba(255, 255, 255, 0.95);
       padding: 24px 28px;
       width: 320px;
       border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
     .login-card h2 {
-      margin-top: 0;
-      margin-bottom: 16px;
+      margin: 0 0 16px 0;
       text-align: center;
     }
 
@@ -49,15 +54,30 @@
       margin-top: 6px;
     }
 
+    .btn-primary {
+      background: #c62828;
+      color: white;
+      border: none;
+    }
+
     .btn-secondary {
       background: #eee;
       border: 1px solid #ccc;
     }
 
-    .btn-primary {
-      background: #c62828;
-      color: white;
-      border: none;
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      body {
+        background: url("./projeto330-mobile.png") no-repeat center top;
+        background-size: cover;
+        align-items: flex-start;
+      }
+
+      .login-card {
+        width: 90%;
+        margin-top: 45vh;
+        padding: 22px;
+      }
     }
   </style>
 </head>
@@ -79,6 +99,7 @@
     const btnSignup = document.getElementById("btnSignup");
     const btnLogin = document.getElementById("btnLogin");
 
+    // CADASTRO
     btnSignup.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
@@ -100,6 +121,7 @@
       }
     });
 
+    // LOGIN
     btnLogin.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
