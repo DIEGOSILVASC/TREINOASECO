@@ -116,3 +116,48 @@
 
       if (error) alert(error.message);
       else window.location.href = "./treinos.html";
+
+<!-- 1️⃣ Biblioteca Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<!-- 2️⃣ Criação do client -->
+<script src="./supabase.js"></script>
+
+<!-- 3️⃣ Login (SÓ DEPOIS DO CLIENT EXISTIR) -->
+<script>
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  document.getElementById("btnSignup").onclick = async () => {
+    if (!window.supabaseClient) {
+      alert("Supabase não carregou");
+      return;
+    }
+
+    const { error } = await window.supabaseClient.auth.signUp({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+
+    alert(error ? error.message : "Usuário criado! Faça login.");
+  };
+
+  document.getElementById("btnLogin").onclick = async () => {
+    if (!window.supabaseClient) {
+      alert("Supabase não carregou");
+      return;
+    }
+
+    const { error } = await window.supabaseClient.auth.signInWithPassword({
+      email: emailInput.value,
+      password: passwordInput.value
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      window.location.href = "./treinos.html";
+    }
+  };
+</script>
+
