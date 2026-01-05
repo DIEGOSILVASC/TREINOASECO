@@ -7,7 +7,7 @@
   <!-- Biblioteca Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-  <!-- Cliente Supabase (SEU) -->
+  <!-- Cliente Supabase -->
   <script src="./supabase.js"></script>
 </head>
 <body>
@@ -28,6 +28,7 @@
     const btnSignup = document.getElementById("btnSignup");
     const btnLogin = document.getElementById("btnLogin");
 
+    // CADASTRO
     btnSignup.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
@@ -38,8 +39,8 @@
       }
 
       const { error } = await window.supabaseClient.auth.signUp({
-        email,
-        password
+        email: email,
+        password: password
       });
 
       if (error) {
@@ -49,21 +50,23 @@
       }
     });
 
+    // LOGIN
     btnLogin.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
 
       const { error } = await window.supabaseClient.auth.signInWithPassword({
-        email,
-        password
+        email: email,
+        password: password
       });
 
       if (error) {
         alert("Erro: " + error.message);
-      } else {window.location.href = "./treinos.html";
-};
-        // futuramente: window.location.href = "./treinos.html";
+        return;
       }
+
+      // login OK → vai para o app
+      window.location.href = "./treinos.html";
     });
   </script>
 
