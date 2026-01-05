@@ -7896,26 +7896,16 @@ function resetAll(){
 </script>
 
 
-<!-- PATCH: DISPARAR EVENTOS PARA GRÁFICO -->
-<script>
-window.addEventListener("load", function () {
-  document.querySelectorAll("#testes input").forEach(function (input) {
-    input.dispatchEvent(new Event("input", { bubbles: true }));
-    input.dispatchEvent(new Event("change", { bubbles: true }));
-  });
-});
-</script>
-
-<!-- Biblioteca Supabase -->
+<!-- 1️⃣ Biblioteca Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-<!-- Cliente Supabase -->
+<!-- 2️⃣ Cliente Supabase -->
 <script src="./supabase.js"></script>
 
-<!-- Adapter -->
+<!-- 3️⃣ Adapter -->
 <script src="./supabase-adapter.js"></script>
 
-<!-- PROTEÇÃO DE ROTA (DEPOIS DO SUPABASE) -->
+<!-- 4️⃣ Proteção de rota (OBRIGATÓRIA) -->
 <script>
 (async function protegerRota() {
   const { data } = await window.supabaseClient.auth.getUser();
@@ -7926,7 +7916,14 @@ window.addEventListener("load", function () {
 })();
 </script>
 
-</body>
-</html>
+<!-- 5️⃣ Patch gráfico (pode ficar por último) -->
+<script>
+window.addEventListener("load", function(){
+  document.querySelectorAll("#testes input").forEach(function(input){
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+});
+</script>
 
 
