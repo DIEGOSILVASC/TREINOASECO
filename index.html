@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
 
-  <!-- 🔥 ESSENCIAL PARA MOBILE FUNCIONAR -->
+  <!-- ESSENCIAL PARA MOBILE -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Projeto 330 — Login</title>
@@ -32,6 +32,7 @@
       padding: 24px;
       border-radius: 8px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 2;
     }
 
     .login-card h2 {
@@ -64,34 +65,48 @@
       background: #eee;
     }
 
-    /* 📱 MOBILE DE VERDADE */
+    /* ===== AVISO MOBILE FLUTUANTE ===== */
+    #mobileNotice {
+      display: none;
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      padding: 14px;
+      font-size: 14px;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      z-index: 999;
+    }
+
+    #mobileNotice button {
+      margin-top: 8px;
+      width: 100%;
+      padding: 8px;
+      border: none;
+      background: #c62828;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* MOBILE */
     @media (max-width: 768px) {
       body {
         background-image: url("./projeto330-mobile.png");
         background-position: center top;
+        align-items: flex-start;
       }
-
-
-  <!-- AVISO MOBILE -->
-  <div id="mobileNotice" style="
-    display:none;
-    background:#fff3cd;
-    border:1px solid #ffeeba;
-    padding:10px;
-    font-size:14px;
-    margin-bottom:10px;
-  ">
-    ⚠️ <strong>Atenção – uso no celular</strong><br>
-    Alterações feitas no celular <strong>não são gravadas</strong>.
-    Use o desktop para salvar.
-    A aba <strong>TESTES</strong> pode ser usada normalmente para calcular o Hit Factor.
-    <br><br>
-    💡 Dica: tire um print no celular e registre depois no computador.
-  </div>
 
       .login-card {
         margin-top: 45vh;
         padding: 20px;
+      }
+
+      #mobileNotice {
+        display: block;
       }
     }
   </style>
@@ -100,15 +115,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="./supabase.js"></script>
 </head>
-<script>
-if (window.innerWidth < 900) {
-  const notice = document.getElementById("mobileNotice");
-  if (notice) notice.style.display = "block";
-}
-</script>
 
 <body>
 
+  <!-- LOGIN -->
   <div class="login-card">
     <h2>Projeto 330</h2>
 
@@ -119,6 +129,20 @@ if (window.innerWidth < 900) {
     <button class="btn-signup" id="btnSignup">Cadastrar</button>
   </div>
 
+  <!-- AVISO MOBILE -->
+  <div id="mobileNotice">
+    ⚠️ <strong>Importante</strong><br><br>
+    No celular, este sistema é indicado apenas para
+    <strong>consulta e cálculos</strong>.<br><br>
+    ✔️ A aba <strong>TESTES</strong> pode ser usada para calcular o <em>Hit Factor</em>.<br>
+    ❌ O salvamento de dados deve ser feito no <strong>desktop</strong>.<br><br>
+    💡 Dica: tire um print no celular e lance depois no computador.
+    <button onclick="document.getElementById('mobileNotice').style.display='none'">
+      Entendi
+    </button>
+  </div>
+
+  <!-- LOGIN JS -->
   <script>
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
@@ -138,50 +162,13 @@ if (window.innerWidth < 900) {
         password: passwordInput.value
       });
 
-      if (error) alert(error.message);
-      else window.location.href = "./treinos.html";
+      if (error) {
+        alert(error.message);
+      } else {
+        window.location.href = "./treinos.html";
+      }
+    };
+  </script>
 
-<!-- 1️⃣ Biblioteca Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<!-- 2️⃣ Criação do client -->
-<script src="./supabase.js"></script>
-
-<!-- 3️⃣ Login (SÓ DEPOIS DO CLIENT EXISTIR) -->
-<script>
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-
-  document.getElementById("btnSignup").onclick = async () => {
-    if (!window.supabaseClient) {
-      alert("Supabase não carregou");
-      return;
-    }
-
-    const { error } = await window.supabaseClient.auth.signUp({
-      email: emailInput.value,
-      password: passwordInput.value
-    });
-
-    alert(error ? error.message : "Usuário criado! Faça login.");
-  };
-
-  document.getElementById("btnLogin").onclick = async () => {
-    if (!window.supabaseClient) {
-      alert("Supabase não carregou");
-      return;
-    }
-
-    const { error } = await window.supabaseClient.auth.signInWithPassword({
-      email: emailInput.value,
-      password: passwordInput.value
-    });
-
-    if (error) {
-      alert(error.message);
-    } else {
-      window.location.href = "./treinos.html";
-    }
-  };
-</script>
-
+</body>
+</html>
