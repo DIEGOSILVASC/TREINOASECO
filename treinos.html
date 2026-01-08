@@ -26,25 +26,7 @@
 
 
 <style>
-<body>
-
-  <!-- AVISO MOBILE -->
-  <div id="mobileNotice" style="
-    display:none;
-    background:#fff3cd;
-    border:1px solid #ffeeba;
-    padding:10px;
-    font-size:14px;
-    margin-bottom:10px;
-  ">
-    ⚠️ <strong>Atenção – uso no celular</strong><br>
-    Alterações feitas no celular <strong>não são gravadas</strong>.
-    Use o desktop para salvar.
-    A aba <strong>TESTES</strong> pode ser usada normalmente para calcular o Hit Factor.
-    <br><br>
-    💡 Dica: tire um print no celular e registre depois no computador.
-  </div>
-{ margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f4f4; }
+body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f4f4; }
 header { background:#fff; border-bottom:4px solid #b32017; padding:15px 20px; display:flex; gap:20px; align-items:center; }
 header img { height:70px; }
 h1 { margin:0; font-size:26px; }
@@ -7979,12 +7961,6 @@ window.addEventListener("load", function(){
     input.dispatchEvent(new Event("change", { bubbles: true }));
   });
 });
-</script>
-<script>
-if (window.innerWidth < 900) {
-  const notice = document.getElementById("mobileNotice");
-  if (notice) notice.style.display = "block";
-}
 </script>
 
 </body>

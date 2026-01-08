@@ -71,6 +71,24 @@
         background-position: center top;
       }
 
+
+  <!-- AVISO MOBILE -->
+  <div id="mobileNotice" style="
+    display:none;
+    background:#fff3cd;
+    border:1px solid #ffeeba;
+    padding:10px;
+    font-size:14px;
+    margin-bottom:10px;
+  ">
+    ⚠️ <strong>Atenção – uso no celular</strong><br>
+    Alterações feitas no celular <strong>não são gravadas</strong>.
+    Use o desktop para salvar.
+    A aba <strong>TESTES</strong> pode ser usada normalmente para calcular o Hit Factor.
+    <br><br>
+    💡 Dica: tire um print no celular e registre depois no computador.
+  </div>
+
       .login-card {
         margin-top: 45vh;
         padding: 20px;
@@ -82,6 +100,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="./supabase.js"></script>
 </head>
+<script>
+if (window.innerWidth < 900) {
+  const notice = document.getElementById("mobileNotice");
+  if (notice) notice.style.display = "block";
+}
+</script>
 
 <body>
 
